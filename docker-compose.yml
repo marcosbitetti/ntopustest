@@ -1,0 +1,49 @@
+version: '3'
+services:
+    mongodb_topus:
+        image: mongo:latest
+        environment:
+            - MONGO_INITDB_DATABASE=${DB_NAME}
+            - MONGO_INITDB_ROOT_USERNAME=${DB_USER}
+            - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD}
+        ports:
+            - '27017-2019:27017-2019'
+        volumes:
+            - ./mongodb/config/mongodb.init.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+            - ./mongodb/data:/data/db
+        tty: true
+        network_mode: host
+    
+    rabbitmq_topus:
+        image: rabbitmq:latest
+        environment:
+            - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+            - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+        ports:
+            - 5672:5672
+            - 15672:15672
+        volumes:
+            - ./rabbitmq/data:/var/lib/rabbitmq/
+            - ./rabbitmq/log:/var/log/rabbitmq
+        tty: true
+        network_mode: host
+        #networks:
+        #   - rabbitmq_topus_net
+    queue_app:
+        image: golang
+        tty: true
+        volumes:
+            - ./queue-app:/go/src/app
+        environment:
+            - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+            - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+        working_dir: /go/src/app
+        entrypoint: sh -c "./init.sh"
+        restart: always
+
+        network_mode: host
+
+
+#networks:
+#    rabbitmq_topus_net:
+#        driver: bridge
