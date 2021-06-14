@@ -17,6 +17,8 @@ vendor/
 # main dockerfolders
 .env
 
+application/pkg
+
 mongodb/data/*
 !mongodb/data/.gitkeep
 
