@@ -13,7 +13,7 @@ import (
 func Users(c *gin.Context) {
 	u := user.New("jose", '1', 1.80, 68.0, 20.98765)
 	log.Printf("users ", len(user.Find("jose")))
-	c.JSON(http.StatusOK, gin.H{"data": u.Nome()})
+	c.JSON(http.StatusOK, gin.H{"data": u.Nome})
 }
 
 func Initialize(e *gin.Engine) {

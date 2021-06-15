@@ -1,15 +1,24 @@
 package user
 
 import (
-	db "github.com/marcosbitetti/topustest/services/database"
+	"time"
+
+	"github.com/marcosbitetti/topustest/services/database"
 )
 
+// "github.com/marcosbitetti/topustest/services/database"
+
 type User struct {
-	nome   string
-	sexo   byte
-	peso   float32
-	altura float32
-	imc    float32
+	Id     string `json:"_id" bson:"_id"`
+	Nome   string
+	Sexo   byte
+	Peso   float32
+	Altura float32
+	IMC    float32
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	Enabled   bool // used to soft delete
 }
 
 /*
@@ -23,8 +32,8 @@ const (
 	NOT_APPLICABLE byte = 9
 )
 
-func (u User) Nome() string {
-	return u.nome
+/*func (u User) Nome() string {
+	return u.Nome
 }
 
 func (u User) Sexo() byte {
@@ -42,14 +51,14 @@ func (u User) Altura() float32 {
 func (u User) IMC() float32 {
 	return u.imc
 }
-
+*/
 func (u User) Calcular() float32 {
-	u.imc = u.peso / (u.altura * u.altura)
-	return u.imc
+	u.IMC = u.Peso / (u.Altura * u.Altura)
+	return u.IMC
 }
 
 func (u User) Update(nome string) string {
-	return u.nome
+	return u.Nome
 }
 
 func (u User) Commit() bool {
@@ -57,7 +66,8 @@ func (u User) Commit() bool {
 }
 
 func New(nome string, sexo byte, altura float32, peso float32, imc float32) User {
-	var u User = User{nome, sexo, altura, peso, imc}
+	t := time.Now()
+	var u User = User{"", nome, sexo, altura, peso, imc, t, t, true}
 	return u
 }
 
@@ -67,10 +77,23 @@ func New(nome string, sexo byte, altura float32, peso float32, imc float32) User
 func Find(nome string) []User {
 	var users []User
 	users = append(users, New("miguel", MALE, 1.2, 60.0, 0.2))
-	if db.DB() {
+	/*if db.DB() {
 		users = append(users, New("ruel", MALE, 1.2, 60.0, 0.2))
-	}
+	}*/
+
 	return users
+}
+
+func FindAll() []User {
+	list := database.FindAll(&User{}, database.UserCollection())
+	var list2 []User = make([]User, len(list))
+	for i, _u := range list {
+		u, ok := _u.(*User)
+		if ok {
+			list2[i] = *u
+		}
+	}
+	return list2
 }
 
 /*
