@@ -65,10 +65,38 @@ func UserCollection() *mongo.Collection {
 	return userCollection
 }
 
+func Find(param bson.M, u interface{}, coll *mongo.Collection) []interface{} {
+	opts := options.Find()
+	opts.SetSort(bson.D{{"nome", 1}})
+
+	list := make([]interface{}, 0)
+	cur, err := coll.Find(context.Background(), param, opts)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	objType := reflect.TypeOf(u).Elem()
+	defer cur.Close(context.Background())
+	for cur.Next(context.Background()) {
+		result := reflect.New(objType).Interface()
+		err := cur.Decode(result)
+		if err != nil {
+			return list
+		}
+		list = append(list, result)
+	}
+
+	if err := cur.Err(); err != nil {
+		return list
+	}
+	return list
+}
+
 // geric find
 func FindAll(u interface{}, coll *mongo.Collection) []interface{} {
-	list := make([]interface{}, 0)
-	cur, err := coll.Find(context.Background(), bson.D{})
+	return Find(bson.M{}, u, coll)
+	/*list := make([]interface{}, 0)
+	cur, err := coll.Find(context.Background(), bson.M{})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -88,7 +116,7 @@ func FindAll(u interface{}, coll *mongo.Collection) []interface{} {
 	if err := cur.Err(); err != nil {
 		return list
 	}
-	return list
+	return list*/
 }
 
 /*

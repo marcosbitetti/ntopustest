@@ -10,8 +10,6 @@ import (
 	"github.com/joho/godotenv"
 
 	"github.com/marcosbitetti/topustest/controllers/users"
-	"github.com/marcosbitetti/topustest/models/user"
-	"github.com/marcosbitetti/topustest/services/database"
 )
 
 var indexContent string
@@ -37,7 +35,7 @@ func main() {
 		}
 	}
 
-	database.DB()
+	/*database.DB()
 	// database.UserCollection()
 	u := user.New("ailoze", user.MALE, 1.6, 68.0, 20.0)
 	//bug, _ :=
@@ -56,7 +54,7 @@ func main() {
 		} else {
 			log.Println("err: ", u.Nome)
 		}
-	}
+	}*/
 
 	web := gin.Default()
 

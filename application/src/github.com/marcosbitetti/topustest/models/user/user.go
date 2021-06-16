@@ -3,6 +3,8 @@ package user
 import (
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
+
 	"github.com/marcosbitetti/topustest/services/database"
 )
 
@@ -75,13 +77,15 @@ func New(nome string, sexo byte, altura float32, peso float32, imc float32) User
  * find by name
  */
 func Find(nome string) []User {
-	var users []User
-	users = append(users, New("miguel", MALE, 1.2, 60.0, 0.2))
-	/*if db.DB() {
-		users = append(users, New("ruel", MALE, 1.2, 60.0, 0.2))
-	}*/
-
-	return users
+	list := database.Find(bson.M{"nome": nome}, &User{}, database.UserCollection())
+	var list2 []User = make([]User, len(list))
+	for i, _u := range list {
+		u, ok := _u.(*User)
+		if ok {
+			list2[i] = *u
+		}
+	}
+	return list2
 }
 
 func FindAll() []User {
