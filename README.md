@@ -21,15 +21,15 @@ Copy and rename .env file:
 
 **step 2**
     
-    Open your open brownser on http://localhost to monitoring events.
+Open your open brownser on http://localhost to monitoring events.
 
 **step 3**
     
-    Import *examplo.postman* to you postman
+Import *examplo.postman* to you postman
 
 **step 4**
 
-    Run **populate.sh** file to start some registers
+Run **populate.sh** file to start some registers
 
 **NOTE** if you wish to change port of monitoring service *(queue_app)* you need to rebuild project in *rabbitmq-monitor-test*. With ***npm run build*** inside *rabbitmq-monitor* folder.
 
