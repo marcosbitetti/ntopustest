@@ -25,7 +25,7 @@ Open your open brownser on http://localhost to monitoring events.
 
 **step 3**
     
-Import ***topustest.postman.json*** to you postman
+Import ***topustest.postman.json*** to your postman
 
 **step 4**
 
